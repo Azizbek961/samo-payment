@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Qarzdor o'quvchilar{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Qarzdor o'quvchilar</h2>
+    <a href="{% url 'debt-add' %}" class="btn btn-warning">
+        <i class="bi bi-plus-circle me-2"></i>Qarz qo'shish
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>F.I.O.</th>
+                <th>Sinf</th>
+                <th>Telefon</th>
+                <th>Oylik to'lov</th>
+                <th>To'lanmagan oylar</th>
+                <th>Qo'shimcha qarzlar</th>
+                <th>Jami qarz</th>
+                <th>Amallar</th>   <!-- Endi tugmalar shu yerda -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for debtor in debtors %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ debtor.student.full_name }}</td>
+                <td>{{ debtor.student.class_grade.name }}</td>
+                <td>{{ debtor.student.phone }}</td>
+                <td class="text-end">{{ debtor.monthly_fee|floatformat:0|intcomma }} UZS</td>
+                <td>
+                    {% for month in debtor.unpaid_months %}
+                        <span class="badge bg-danger me-1">{{ month|date:"M Y" }}</span>
+                    {% empty %}
+                        <span class="text-muted">—</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for debt in debtor.extra_debts %}
+                        <div class="mb-1">
+                            <span class="badge bg-warning text-dark" title="{{ debt.description }}">
+                                {{ debt.amount|floatformat:0|intcomma }} UZS
+                            </span>
+                        </div>
+                    {% empty %}
+                        <span class="text-muted">—</span>
+                    {% endfor %}
+                </td>
+                <td class="text-end text-danger fw-bold">{{ debtor.total_debt|floatformat:0|intcomma }} UZS</td>
+                <td>
+                    {% for debt in debtor.extra_debts %}
+                        <div class="btn-group btn-group-sm mb-1" role="group">
+                            <a href="{% url 'debt-detail' debt.pk %}" class="btn btn-outline-info" title="Ko‘rish">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{% url 'debt-update' debt.pk %}" class="btn btn-outline-warning" title="Tahrirlash">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'debt-delete' debt.pk %}" class="btn btn-outline-danger" title="O‘chirish">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    {% empty %}
+                        <span class="text-muted">—</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="9" class="text-center py-4">✅ Qarzdor o'quvchilar topilmadi.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

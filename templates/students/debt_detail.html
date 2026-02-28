@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Qarz tafsilotlari{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0"><i class="bi bi-info-circle me-2"></i>Qarz tafsilotlari</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tr>
+                <th>O‘quvchi</th>
+                <td>{{ debt.student.full_name }}</td>
+            </tr>
+            <tr>
+                <th>Summa</th>
+                <td>{{ debt.amount|floatformat:0 }} UZS</td>
+            </tr>
+            <tr>
+                <th>Izoh</th>
+                <td>{{ debt.description|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>Sana</th>
+                <td>{{ debt.date|date:"d-m-Y" }}</td>
+            </tr>
+            <tr>
+                <th>To‘langanmi?</th>
+                <td>
+                    {% if debt.is_paid %}
+                        <span class="badge bg-success">Ha</span>
+                    {% else %}
+                        <span class="badge bg-danger">Yo‘q</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'debt-update' debt.pk %}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Tahrirlash
+            </a>
+            <a href="{% url 'debt-delete' debt.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> O‘chirish
+            </a>
+            <a href="{% url 'student-debts' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Orqaga
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

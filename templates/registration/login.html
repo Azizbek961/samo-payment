@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish | Samo International School</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 1rem;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+        }
+        .school-name {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .school-name h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+        }
+        .school-name .subtitle {
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: 400;
+        }
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.1), 0 5px 12px -4px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem 2rem;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        .login-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.75rem;
+            text-align: center;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #334155;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-label i {
+            color: #94a3b8;
+            font-size: 1rem;
+            width: 1.2rem;
+        }
+        .form-control {
+            border-radius: 14px;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid #e2e8f0;
+            background-color: #f9fbfd;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus {
+            border-color: #2563eb;
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+        .form-control::placeholder {
+            color: #a0afbe;
+            font-weight: 300;
+        }
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0 1.2rem;
+        }
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 1.1rem;
+            height: 1.1rem;
+            accent-color: #2563eb;
+            margin: 0;
+            border-radius: 4px;
+        }
+        .checkbox-wrapper label {
+            color: #334155;
+            font-size: 0.9rem;
+            user-select: none;
+        }
+        .forgot-link {
+            margin-left: auto;
+            font-size: 0.9rem;
+        }
+        .forgot-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .forgot-link a:hover {
+            text-decoration: underline;
+        }
+        .btn-login {
+            background-color: #0f172a;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 0.85rem;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px -2px rgba(15, 23, 42, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .btn-login:hover {
+            background-color: #1e293b;
+            box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.3);
+        }
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+        .extra-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 2rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #eef2f6;
+        }
+        .extra-links a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .extra-links a:hover {
+            color: #0f172a;
+        }
+        .alert {
+            border-radius: 14px;
+            font-size: 0.9rem;
+            padding: 0.9rem 1.2rem;
+            border: none;
+            background-color: #fee2e2;
+            color: #991b1b;
+            margin-bottom: 1.8rem;
+        }
+        .alert i {
+            margin-right: 0.5rem;
+        }
+        /* Muvaffaqiyatli kirish uchun (ixtiyoriy) */
+        .text-muted {
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Maktab nomi (logotip oʻrnida) -->
+        <div class="school-name">
+            <h1>Samo International School</h1>
+            <div class="subtitle">Toʻlov tizimi</div>
+        </div>
+
+        <!-- Login kartasi -->
+        <div class="login-card">
+            <h2>Tizimga kirish</h2>
+
+            <!-- Xatolik xabari (agar mavjud boʻlsa) -->
+            {% if form.errors %}
+                <div class="alert" role="alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Foydalanuvchi nomi yoki parol notoʻgʻri. Qayta urinib koʻring.
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Foydalanuvchi nomi -->
+                <div class="mb-4">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i> Foydalanuvchi nomi
+                    </label>
+                    <input type="text" class="form-control" id="username" name="username"
+                           placeholder="Kirish nomingiz" required autofocus>
+                </div>
+
+                <!-- Parol -->
+                <div class="mb-4">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i> Parol
+                    </label>
+                    <input type="password" class="form-control" id="password" name="password"
+                           placeholder="••••••••" required>
+                </div>
+
+                <!-- Eslab qolish + Parolni unutdingizmi? -->
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Eslab qolish</label>
+                    </div>
+                    <div class="forgot-link">
+                        <a href="#">Parolni unutdingizmi?</a>
+                    </div>
+                </div>
+
+                <!-- Kirish tugmasi -->
+                <button type="submit" class="btn-login mt-4">
+                    <i class="fas fa-arrow-right-to-bracket"></i> Kirish
+                </button>
+            </form>
+
+            <!-- Qoʻshimcha havolalar -->
+            <div class="extra-links">
+                <a href="#">Yordam</a>
+                <a href="#">Maxfiylik siyosati</a>
+                <a href="#">Bogʻlanish</a>
+            </div>
+        </div>
+
+        <!-- Pastki izoh (ixtiyoriy) -->
+        <div class="text-center mt-4 text-muted" style="font-size:0.8rem;">
+            &copy; 2026 Samo International School. Barcha huquqlar himoyalangan.
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (ixtiyoriy) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Qarzni o‘chirish{% endblock %}
+
+{% block content %}
+<div class="card shadow border-danger">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Qarzni o‘chirish</h4>
+    </div>
+    <div class="card-body">
+        <p class="fs-5">
+            <strong>{{ debt.student.full_name }}</strong> ga tegishli
+            <strong>{{ debt.amount|floatformat:0 }} UZS</strong> qarzni o‘chirmoqchimisiz?
+        </p>
+        <p class="text-muted">{{ debt.description|default:"Izoh yo‘q" }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{% url 'debt-detail' debt.pk %}" class="btn btn-secondary">
+                    Bekor qilish
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Ha, o‘chir
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

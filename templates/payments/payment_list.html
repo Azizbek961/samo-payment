@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}To'lovlar{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>To'lovlar</h2>
+    <a href="{% url 'payment-create' %}" class="btn btn-primary">Yangi to'lov</a>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Chek №</th>
+            <th>Sana</th>
+            <th>O'quvchi</th>
+            <th>Oy</th>
+            <th>Summa (UZS)</th>
+            <th>Usul</th>
+            <th>Kassir</th>
+            <th>Chek</th>
+            <th>Amallar</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payment in payments %}
+        <tr>
+            <td>{{ payment.receipt_number }}</td>
+            <td>{{ payment.timestamp|date:"d.m.Y H:i" }}</td>
+            <td>{{ payment.student.full_name }}</td>
+            <td>{{ payment.month_year|date:"F Y" }}</td>
+            <td>{{ payment.amount|floatformat:0 }}</td>
+            <td>{{ payment.get_method_display }}</td>
+            <td>{{ payment.created_by.username }}</td>
+            <td><a href="{% url 'payment-print-receipt' payment.pk %}" class="btn btn-sm btn-info">Chek</a></td>
+            <td>
+    <a href="{% url 'payment-delete' payment.pk %}" class="btn btn-sm btn-danger" title="O'chirish">
+        <i class="bi bi-trash"></i>
+    </a>
+</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center">To'lovlar mavjud emas.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if is_paginated %}
+<nav>
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Oldingi</a></li>
+        {% endif %}
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Keyingi</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
