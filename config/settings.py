@@ -56,17 +56,33 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+DATABASE_URL = os.environ.get("DATABASE_URL")
+from urllib.parse import urlparse
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'school_tuition',
-        'USER': 'school_user',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+if DATABASE_URL:
+    u = urlparse(DATABASE_URL)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": u.path.lstrip("/"),
+            "USER": u.username,
+            "PASSWORD": u.password,
+            "HOST": u.hostname,
+            "PORT": u.port or 5432,
+        }
     }
-}
+else:
+    # Lokal uchun (xohlasangiz eski qiymatlaringizni shu yerga qo'ying)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "school_tuition",
+            "USER": "school_user",
+            "PASSWORD": "123456",
+            "HOST": "127.0.0.1",
+            "PORT": "5432",
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
