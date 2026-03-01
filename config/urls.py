@@ -11,6 +11,5 @@ urlpatterns = [
     path('printers/', include('apps.printers.urls')),
     path('dashboard/', include('apps.dashboard.urls')),
     path('', RedirectView.as_view(url='/dashboard/')),
-    path('select2/', include('django_select2.urls')),
-
+    path("select2/", include("django_select2.urls")),
 ]

@@ -2,6 +2,7 @@
 {% block title %}Yangi to'lov{% endblock %}
 
 {% block extra_css %}
+{{ form.media.css }}
 <style>
     /* Form maydonlari uchun stil */
     input, select, textarea {
@@ -57,7 +58,6 @@
         <form method="post" novalidate>
             {% csrf_token %}
 
-            {{ form.media }}  <!-- Select2 uchun zarur CSS/JS -->
 
             <!-- Formaning umumiy xatoliklari -->
             {% if form.non_field_errors %}
@@ -104,4 +104,11 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+  {# If your project doesn't already include jQuery globally, add it: #}
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  {{ form.media.js }}
 {% endblock %}
