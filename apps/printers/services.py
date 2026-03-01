@@ -1,5 +1,17 @@
-import win32print
 from datetime import datetime
+import os
+
+# Windows-only import
+WIN32_AVAILABLE = False
+win32print = None
+
+if os.name == "nt":  # Windows
+    try:
+        import win32print  # type: ignore
+        WIN32_AVAILABLE = True
+    except Exception:
+        WIN32_AVAILABLE = False
+
 
 ESC = b"\x1b"
 GS = b"\x1d"
@@ -40,24 +52,30 @@ def escpos_qr(data: str, size: int = 6, ec_level: int = 48):
     pH = (store_len >> 8) & 0xFF
 
     cmd = b""
-    # Select model: 2
-    cmd += GS + b"(k" + bytes([4, 0]) + b"1A" + bytes([50, 0])
-    # Set size
-    cmd += GS + b"(k" + bytes([3, 0]) + b"1C" + bytes([max(1, min(size, 16))])
-    # Error correction
-    cmd += GS + b"(k" + bytes([3, 0]) + b"1E" + bytes([ec_level])
-    # Store data
-    cmd += GS + b"(k" + bytes([pL, pH]) + b"1P0" + bdata
-    # Print QR
-    cmd += GS + b"(k" + bytes([3, 0]) + b"1Q0"
+    cmd += GS + b"(k" + bytes([4, 0]) + b"1A" + bytes([50, 0])                       # model 2
+    cmd += GS + b"(k" + bytes([3, 0]) + b"1C" + bytes([max(1, min(size, 16))])        # size
+    cmd += GS + b"(k" + bytes([3, 0]) + b"1E" + bytes([ec_level])                      # EC level
+    cmd += GS + b"(k" + bytes([pL, pH]) + b"1P0" + bdata                               # store
+    cmd += GS + b"(k" + bytes([3, 0]) + b"1Q0"                                         # print
     return cmd
 
 def print_receipt(payment, config):
+    """
+    Windows serverda: chek chiqaradi.
+    Fly.io (Linux)da: win32print yo'qligi uchun exception tashlamaydi, False qaytaradi.
+    """
+
+    # Printer type tekshiruv (sizdagi eski shart)
     if config.printer_type != "windows":
-        raise Exception("Printer Windows mode emas")
+        # Oldin raise qilgansiz. Fly'da yiqitmaslik uchun False qaytaramiz.
+        return False
+
+    # Agar platforma Windows bo'lmasa yoki win32print import bo'lmasa:
+    if not WIN32_AVAILABLE:
+        return False
 
     printer_name = config.printer_name or "POSPrinter POS80"
-    WIDTH = 32  # POS80’da odatda 32 ishonchli
+    WIDTH = 32
 
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
 
@@ -68,7 +86,7 @@ def print_receipt(payment, config):
     receipt += esc_align(1)
     receipt += esc_bold(True)
     receipt += esc_size(True)
-    receipt += ("Samo International Schol\n").encode("utf-8")   # <-- NOMI
+    receipt += ("Samo International Schol\n").encode("utf-8")
     receipt += esc_size(False)
     receipt += esc_bold(False)
 
@@ -111,14 +129,13 @@ def print_receipt(payment, config):
     receipt += ("QR orqali tekshirish:\n").encode("utf-8")
 
     qr_data = f"RCPT={payment.receipt_number}|STUDENT={payment.student}|AMOUNT={payment.amount}|DATE={now_str}"
-    receipt += escpos_qr(qr_data, size=6, ec_level=48)  # L level
+    receipt += escpos_qr(qr_data, size=6, ec_level=48)
     receipt += b"\n"
 
     # FOOTER
     receipt += ("Rahmat!\n").encode("utf-8")
     receipt += ("Yana kutib qolamiz.\n").encode("utf-8")
 
-    # Make it longer
     receipt += b"\n\n\n\n\n\n\n\n\n\n"
     receipt += esc_cut()
 
@@ -132,3 +149,5 @@ def print_receipt(payment, config):
         win32print.EndDocPrinter(hPrinter)
     finally:
         win32print.ClosePrinter(hPrinter)
+
+    return True
