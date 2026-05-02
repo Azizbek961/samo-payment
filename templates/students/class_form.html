@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Yangi sinf{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>➕ Yangi sinf qo‘shish</h3>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Sinf nomi</label>
+                    {{ form.name }}
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Saqlash
+                </button>
+
+                <a href="{% url 'class_list' %}" class="btn btn-secondary">
+                    Bekor qilish
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

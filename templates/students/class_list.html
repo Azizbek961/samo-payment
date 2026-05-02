@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Sinflar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>📚 Sinflar ro‘yxati</h3>
+        <a href="{% url 'class_create' %}" class="btn btn-primary">
+            + Yangi sinf
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if classes %}
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Sinf nomi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in classes %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ c.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>Hozircha sinflar mavjud emas.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}To'lovni o'chirish{% endblock %}
+{% block content %}
+<div class="card border-danger">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>To'lovni o'chirish</h4>
+    </div>
+    <div class="card-body">
+        <p class="fs-5">Ushbu to'lovni o'chirmoqchimisiz?</p>
+        <p><strong>Chek №:</strong> {{ object.receipt_number }}</p>
+        <p><strong>O'quvchi:</strong> {{ object.student.full_name }}</p>
+        <p><strong>Summa:</strong> {{ object.amount }} UZS</p>
+        <p><strong>Sana:</strong> {{ object.timestamp|date:"d.m.Y H:i" }}</p>
+        <p class="text-muted">Bu amalni ortga qaytarib bo'lmaydi.</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Ha, o'chir</button>
+            <a href="{% url 'payment-list' %}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Bekor qilish</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

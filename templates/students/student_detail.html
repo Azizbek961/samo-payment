@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{{ student.full_name }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="bi bi-person-badge me-2"></i>O'quvchi ma'lumotlari</h4>
+        <div>
+            <a href="{% url 'student-update' student.pk %}" class="btn btn-sm btn-warning">
+                <i class="bi bi-pencil"></i> Tahrirlash
+            </a>
+            <a href="{% url 'student-list' %}" class="btn btn-sm btn-secondary">
+                <i class="bi bi-arrow-left"></i> Orqaga
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tr><th style="width:200px;">F.I.O.</th><td>{{ student.full_name }}</td></tr>
+            <tr><th>Telefon</th><td>{{ student.phone }}</td></tr>
+            <tr><th>Ota-ona</th><td>{{ student.parent_name }}</td></tr>
+            <tr><th>Ota-ona telefoni</th><td>{{ student.parent_phone }}</td></tr>
+            <tr><th>Manzil</th><td>{{ student.address|default:"-" }}</td></tr>
+            <tr><th>Sinf</th><td>{{ student.class_grade.name }}</td></tr>
+            <tr><th>Qabul sanasi</th><td>{{ student.enrollment_date|date:"d.m.Y" }}</td></tr>
+            <tr><th>Holati</th><td>
+                {% if student.status == 'active' %}<span class="badge bg-success">Faol</span>
+                {% elif student.status == 'inactive' %}<span class="badge bg-secondary">Nofaol</span>
+                {% else %}<span class="badge bg-info">Bitirgan</span>{% endif %}
+            </td></tr>
+            <tr><th>Maxsus to'lov</th><td>{% if student.override_fee %}{{ student.override_fee }} UZS{% else %}—{% endif %}</td></tr>
+            <tr><th>Asosiy to'lov</th><td>{{ student.monthly_fee }} UZS</td></tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

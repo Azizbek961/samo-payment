@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}{% if object %}O'quvchini tahrirlash{% else %}Yangi o'quvchi{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Input, select, textarea elementlariga Bootstrap form-control klassini beradi (backendga tegmasdan) */
+    input, select, textarea {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    input:focus, select:focus, textarea:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    /* Error listni chiroyli ko'rsatish */
+    .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 0.5rem 0;
+        color: #dc3545;
+        font-size: 0.875rem;
+    }
+    .errorlist li {
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    /* Help text */
+    .helptext {
+        display: block;
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+    /* Karta header gradient */
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+    }
+    /* Tugmalar hover effekti */
+    .btn-success {
+        transition: all 0.2s;
+    }
+    .btn-success:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg border-0">
+    <div class="card-header bg-gradient-primary text-white py-3">
+        <h4 class="mb-0">
+            <i class="bi bi-person-plus me-2"></i>
+            {% if object %}O'quvchini tahrirlash{% else %}Yangi o'quvchi qo'shish{% endif %}
+        </h4>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- Maydonlar ikki ustunga joylashtirilgan -->
+            <div class="row g-3">
+                {% for field in form %}
+                    <div class="col-md-6">
+                        <label for="{{ field.id_for_label }}" class="form-label fw-semibold">{{ field.label }}</label>
+
+                        {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                    <li><i class="bi bi-exclamation-circle"></i> {{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <div class="helptext">{{ field.help_text }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <hr class="my-4">
+
+            <div class="d-flex justify-content-end gap-3">
+                <a href="{% url 'student-list' %}" class="btn btn-outline-secondary px-4 py-2">
+                    <i class="bi bi-x-circle me-2"></i>Bekor qilish
+                </a>
+                <button type="submit" class="btn btn-success px-5 py-2">
+                    <i class="bi bi-check-circle me-2"></i>Saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

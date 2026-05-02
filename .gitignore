@@ -1,0 +1,87 @@
+# ==============================
+# Python
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ==============================
+# Django
+# ==============================
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Media files (user uploaded)
+media/
+
+# Collected static files
+staticfiles/
+
+# ==============================
+# Environment variables
+# ==============================
+.env
+.env.*
+*.env
+
+# ==============================
+# VS Code
+# ==============================
+.vscode/
+
+# ==============================
+# PyCharm
+# ==============================
+.idea/
+*.iml
+
+# ==============================
+# MacOS
+# ==============================
+.DS_Store
+
+# ==============================
+# Windows
+# ==============================
+Thumbs.db
+Desktop.ini
+
+# ==============================
+# Coverage / Testing
+# ==============================
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ==============================
+# Migrations (agar kerak bo'lsa comment qilib qo'yasiz)
+# ==============================
+# */migrations/*
+# !*/migrations/__init__.py
+
+# ==============================
+# Static build tools
+# ==============================
+node_modules/
+dist/
+build/
+
+# ==============================
+# Logs
+# ==============================
+*.log
+
+# ==============================
+# Cache
+# ==============================
+.cache/

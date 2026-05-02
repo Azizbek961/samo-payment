@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}O'quvchilar ro'yxati{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-people-fill me-2"></i>O'quvchilar</h2>
+    <div>
+        <a href="{% url 'student-import' %}" class="btn btn-outline-primary me-2">
+            <i class="bi bi-upload"></i> Import
+        </a>
+        <a href="{% url 'student-export' %}" class="btn btn-outline-success me-2">
+            <i class="bi bi-download"></i> Export
+        </a>
+        <a href="{% url 'student-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Yangi o'quvchi
+        </a>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>F.I.O.</th>
+                <th>Telefon</th>
+                <th>Ota-ona</th>
+                <th>Sinf</th>
+                <th>Holati</th>
+                <th>Amallar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.phone }}</td>
+                <td>{{ student.parent_name }}<br><small class="text-muted">{{ student.parent_phone }}</small></td>
+                <td>{{ student.class_grade.name }}</td>
+                <td>
+                    {% if student.status == 'active' %}
+                        <span class="badge bg-success">Faol</span>
+                    {% elif student.status == 'inactive' %}
+                        <span class="badge bg-secondary">Nofaol</span>
+                    {% else %}
+                        <span class="badge bg-info">Bitirgan</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'student-detail' student.pk %}" class="btn btn-sm btn-outline-info" title="Ko'rish">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{% url 'student-update' student.pk %}" class="btn btn-sm btn-outline-warning" title="Tahrirlash">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'student-delete' student.pk %}" class="btn btn-sm btn-outline-danger" title="O'chirish">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center py-4">Hech qanday o'quvchi topilmadi.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if is_paginated %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Oldingi">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Keyingi">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

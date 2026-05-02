@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>To'lovlar Hisoboti</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>To'lovlar Hisoboti</h1>
+    <p>Chiqarilgan sana: {{ now|date:"d.m.Y H:i" }}</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Chek raqami</th>
+                <th>Sana</th>
+                <th>O'quvchi</th>
+                <th>Sinf</th>
+                <th>Oy</th>
+                <th>Summa (UZS)</th>
+                <th>To'lov turi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payments %}
+            <tr>
+                <td>{{ payment.receipt_number }}</td>
+                <td>{{ payment.timestamp|date:"d.m.Y" }}</td>
+                <td>{{ payment.student.full_name }}</td>
+                <td>{{ payment.student.class_grade.name }}</td>
+                <td>{{ payment.month_year|date:"Y-m" }}</td>
+                <td>{{ payment.amount|floatformat:0 }}</td>
+                <td>{{ payment.get_method_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center;">Ma'lumotlar topilmadi</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <p>Samo International School</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Hisobotlar{% endblock %}
+{% block content %}
+<h2>Hisobotlar</h2>
+<form method="get" action="{% url 'reports-export-excel' %}" class="row g-3 mb-3">
+    <div class="col-auto">
+        <label for="start_date" class="visually-hidden">Boshlanish sanasi</label>
+        <input type="date" name="start_date" class="form-control" placeholder="Boshlanish">
+    </div>
+    <div class="col-auto">
+        <label for="end_date" class="visually-hidden">Tugash sanasi</label>
+        <input type="date" name="end_date" class="form-control" placeholder="Tugash">
+    </div>
+    <div class="col-auto">
+        <select name="class" class="form-select">
+            <option value="">Barcha sinflar</option>
+            {% for class in classes %}
+            <option value="{{ class.id }}">{{ class.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-auto">
+        <select name="method" class="form-select">
+            <option value="">Barcha usullar</option>
+            <option value="cash">Naqd</option>
+            <option value="card">Karta</option>
+            <option value="transfer">Pul o'tkazmasi</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-success">Excel</button>
+        <button type="submit" formaction="{% url 'reports-export-pdf' %}" class="btn btn-danger">PDF</button>
+    </div>
+</form>
+<p>Hisobotlarni yuklab olish uchun filtrlang va Excel/PDF tugmasini bosing.</p>
+{% endblock %}

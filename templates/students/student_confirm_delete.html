@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}O'quvchini o'chirish{% endblock %}
+{% block content %}
+<div class="card border-danger">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>O'chirishni tasdiqlang</h4>
+    </div>
+    <div class="card-body">
+        {% if related_payments %}
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                Ushbu o‘quvchiga tegishli to‘lovlar mavjud! Qanday o‘chirishni tanlang:
+            </div>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>To‘lov sanasi</th>
+                        <th>Summa</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in related_payments %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ payment.date|date:"d.m.Y" }}</td>
+                        <td>{{ payment.amount }} UZS</td>
+                        <td>{{ payment.description|truncatewords:5 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" name="action" value="delete_with_payments" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> O'quvchi va to'lovlarni birga o'chirish
+                </button>
+            </form>
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" name="action" value="delete_only_student" class="btn btn-warning">
+                    <i class="bi bi-person-dash"></i> Faqat o'quvchini o'chirish (to'lovlar qoladi)
+                </button>
+            </form>
+            <a href="{% url 'student-list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Orqaga
+            </a>
+        {% else %}
+            <p class="fs-5">"{{ object.full_name }}" o‘quvchini o‘chirmoqchimisiz?</p>
+            <p class="text-muted">Bu amalni ortga qaytarib bo‘lmaydi.</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="action" value="delete_only_student" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Ha, o‘chir
+                </button>
+                <a href="{% url 'student-list' %}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Bekor qilish
+                </a>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
