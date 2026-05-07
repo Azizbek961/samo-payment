@@ -1,10 +1,7 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 from apps.students.models import Student
-
-User = get_user_model()
 
 class Payment(models.Model):
     METHOD_CHOICES = [
@@ -17,7 +14,6 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     method = models.CharField(max_length=10, choices=METHOD_CHOICES)
     notes = models.TextField(blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     timestamp = models.DateTimeField(auto_now_add=True)
     receipt_number = models.CharField(max_length=20, unique=True, blank=True)
     is_adjustment = models.BooleanField(default=False, help_text="Allow duplicate month if needed")

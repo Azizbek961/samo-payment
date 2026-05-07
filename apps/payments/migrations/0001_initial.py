@@ -3,7 +3,6 @@
 import django.core.validators
 import django.db.models.deletion
 from decimal import Decimal
-from django.conf import settings
 from django.db import migrations, models
 
 
@@ -13,7 +12,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('students', '0001_initial'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -28,7 +26,6 @@ class Migration(migrations.Migration):
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('receipt_number', models.CharField(blank=True, max_length=20, unique=True)),
                 ('is_adjustment', models.BooleanField(default=False, help_text='Allow duplicate month if needed')),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
                 ('student', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='payments', to='students.student')),
             ],
             options={

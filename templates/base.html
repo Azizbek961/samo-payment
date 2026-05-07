@@ -127,32 +127,6 @@
                         </a>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-1 fs-5"></i>
-                            <span>{{ user.get_full_name|default:user.username }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <form method="post" action="{% url 'logout' %}">
-  {% csrf_token %}
-  <button type="submit" class="dropdown-item">
-    <i class="bi bi-box-arrow-right"></i> Chiqish
-  </button>
-</form>
-                            </li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">
-                            <i class="bi bi-box-arrow-in-right me-1"></i>Kirish
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
             </div>
         </div>
     </nav>

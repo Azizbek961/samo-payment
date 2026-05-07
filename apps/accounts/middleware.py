@@ -8,32 +8,24 @@ class AutoLoginMiddleware:
 
     def __call__(self, request):
 
-        if not request.user.is_authenticated:
+        # login shart emas bo‘lsa darhol chiqamiz
+        if request.user.is_authenticated:
+            return self.get_response(request)
 
-            try:
-                User = get_user_model()
+        try:
+            User = get_user_model()
 
-                user = (
-                    User.objects.filter(
-                        is_active=True,
-                        is_superuser=True
-                    ).order_by("id").first()
+            # ❗ safe query (DB crash bo‘lmaydi)
+            user = User.objects.filter(
+                is_active=True,
+                is_superuser=True
+            ).only("id").first()
 
-                    or
+            if user:
+                login(request, user, backend="django.contrib.auth.backends.ModelBackend")
 
-                    User.objects.filter(
-                        is_active=True
-                    ).order_by("id").first()
-                )
-
-                if user:
-                    login(
-                        request,
-                        user,
-                        backend="django.contrib.auth.backends.ModelBackend"
-                    )
-
-            except (OperationalError, ProgrammingError):
-                pass
+        except (OperationalError, ProgrammingError):
+            # DB hali ready emas → ignore
+            pass
 
         return self.get_response(request)

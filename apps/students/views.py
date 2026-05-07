@@ -1,6 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
@@ -19,37 +17,29 @@ from decimal import Decimal
 
 
 # ---------- CRUD ----------
-class StudentListView(LoginRequiredMixin, ListView):
+class StudentListView(ListView):
     model = Student
     template_name = 'students/student_list.html'
     context_object_name = 'students'
     paginate_by = 20
 
 
-class StudentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class StudentCreateView(CreateView):
     model = Student
     fields = ['full_name', 'phone', 'parent_name', 'parent_phone', 'address',
               'class_grade', 'enrollment_date', 'status', 'override_fee']
     template_name = 'students/student_form.html'
     success_url = reverse_lazy('student-list')
-    permission_required = 'students.add_student'
-
-
-class StudentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class StudentUpdateView(UpdateView):
     model = Student
     fields = ['full_name', 'phone', 'parent_name', 'parent_phone', 'address',
               'class_grade', 'enrollment_date', 'status', 'override_fee']
     template_name = 'students/student_form.html'
     success_url = reverse_lazy('student-list')
-    permission_required = 'students.change_student'
-
-
-class StudentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class StudentDeleteView(DeleteView):
     model = Student
     template_name = 'students/student_confirm_delete.html'
     success_url = reverse_lazy('student-list')
-    permission_required = 'students.delete_student'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['related_payments'] = Payment.objects.filter(student=self.object)
@@ -80,14 +70,13 @@ class StudentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
                 return HttpResponseRedirect(self.success_url)
 
 
-class StudentDetailView(LoginRequiredMixin, DetailView):
+class StudentDetailView(DetailView):
     model = Student
     template_name = 'students/student_detail.html'
     context_object_name = 'student'
 
 
 # ---------- IMPORT ----------
-@login_required
 def import_students(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
@@ -149,7 +138,6 @@ def import_students(request):
 
 
 # ---------- EXPORT ----------
-@login_required
 def export_students(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="students.csv"'
@@ -174,7 +162,7 @@ def export_students(request):
 
 
 # ---------- DEBTS ----------
-class DebtListView(LoginRequiredMixin, TemplateView):
+class DebtListView(TemplateView):
     template_name = 'debts/debt_list.html'
 
     def get_context_data(self, **kwargs):
@@ -269,37 +257,27 @@ class DebtListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class DebtCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class DebtCreateView(CreateView):
     model = Debt
     form_class = DebtForm
     template_name = 'students/debt_form.html'
     success_url = reverse_lazy('student-debts')
-    permission_required = 'students.add_debt'
-
-
-class DebtDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class DebtDetailView(DetailView):
     model = Debt
     template_name = 'students/debt_detail.html'
     context_object_name = 'debt'
-    permission_required = 'students.view_debt'
-
-
-class DebtUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class DebtUpdateView(UpdateView):
     model = Debt
     form_class = DebtForm
     template_name = 'students/debt_form.html'
-    permission_required = 'students.change_debt'
-
     def get_success_url(self):
         return reverse_lazy('debt-detail', kwargs={'pk': self.object.pk})
 
 
-class DebtDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class DebtDeleteView(DeleteView):
     model = Debt
     template_name = 'students/debt_confirm_delete.html'
     success_url = reverse_lazy('student-debts')
-    permission_required = 'students.delete_debt'
-
     def form_valid(self, form):
         if self.object.is_paid:
             messages.error(self.request, "To'langan qarzni o'chirib bo'lmaydi.")
@@ -308,13 +286,11 @@ class DebtDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 
 # ---------- CLASS GRADES ----------
-@login_required
 def class_list(request):
     classes = ClassGrade.objects.all().order_by("name")
     return render(request, "students/class_list.html", {"classes": classes})
 
 
-@login_required
 def class_create(request):
     if request.method == "POST":
         form = ClassGradeForm(request.POST)

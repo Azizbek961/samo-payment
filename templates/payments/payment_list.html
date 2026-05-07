@@ -14,7 +14,6 @@
             <th>Oy</th>
             <th>Summa (UZS)</th>
             <th>Usul</th>
-            <th>Kassir</th>
             <th>Chek</th>
             <th>Amallar</th>
             <th></th>
@@ -29,7 +28,6 @@
             <td>{{ payment.month_year|date:"F Y" }}</td>
             <td>{{ payment.amount|floatformat:0 }}</td>
             <td>{{ payment.get_method_display }}</td>
-            <td>{{ payment.created_by.username }}</td>
             <td><a href="{% url 'payment-print-receipt' payment.pk %}" class="btn btn-sm btn-info">Chek</a></td>
             <td>
     <a href="{% url 'payment-delete' payment.pk %}" class="btn btn-sm btn-danger" title="O'chirish">
@@ -38,7 +36,7 @@
 </td>
         </tr>
         {% empty %}
-        <tr><td colspan="8" class="text-center">To'lovlar mavjud emas.</td></tr>
+        <tr><td colspan="9" class="text-center">To'lovlar mavjud emas.</td></tr>
         {% endfor %}
     </tbody>
 </table>

@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Q
 from django.utils import timezone
 from django.utils.formats import date_format
@@ -11,7 +10,6 @@ from apps.students.models import Student, ClassGrade
 from apps.payments.models import Payment
 from apps.payments.services.debt import calculate_total_debt, get_top_debtors
 
-@login_required
 def dashboard(request):
     today = timezone.now().date()
     current_month_start = today.replace(day=1)

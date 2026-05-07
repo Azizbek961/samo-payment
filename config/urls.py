@@ -1,11 +1,7 @@
-from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/login/', RedirectView.as_view(url='/dashboard/', permanent=False)),
-    path('accounts/', include('django.contrib.auth.urls')),  # login/logout
     path('students/', include('apps.students.urls')),
     path('payments/', include('apps.payments.urls')),
     path('reports/', include('apps.reports.urls')),
