@@ -1,47 +1,35 @@
 import os
-import sys
-from decouple import config
 from pathlib import Path
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-def in_exe():
-    return getattr(sys, "frozen", False)
+# =====================
+# CORE SETTINGS
+# =====================
+SECRET_KEY = config(
+    "SECRET_KEY",
+    default="django-insecure-temporary-secret-key-change"
+)
+
+DEBUG = config("DEBUG", default=True, cast=bool)
+
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "samoschoolpayment.up.railway.app",
+]
 
 
-if in_exe():
-    EXE_DIR = Path(sys.executable).resolve().parent
-else:
-    EXE_DIR = BASE_DIR
-
-
-def get_sqlite_db_path():
-    configured_path = os.environ.get("SQLITE_DB_PATH")
-    if configured_path:
-        return Path(configured_path).expanduser().resolve()
-
-    if not in_exe():
-        return BASE_DIR / "db.sqlite3"
-
-    candidates = [
-        EXE_DIR.parent / "db.sqlite3",
-        EXE_DIR / "db.sqlite3",
-    ]
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-
-    return EXE_DIR / "db.sqlite3"
-
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-temporary-secret-key-change-in-production')
-DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "samoschool.fly.dev", 'https://samoschoolpayment.up.railway.app', '*']
-
+# =====================
+# APPS
+# =====================
 INSTALLED_APPS = [
     "dal",
     "dal_select2",
     "django_select2",
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -49,7 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+
     "rest_framework",
+
     "apps.accounts",
     "apps.students",
     "apps.payments",
@@ -58,21 +48,33 @@ INSTALLED_APPS = [
     "apps.dashboard",
 ]
 
+
+# =====================
+# MIDDLEWARE
+# =====================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+
+    # ⚠️ safe middleware (must be fixed inside too)
     "apps.accounts.middleware.AutoLoginMiddleware",
+
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
 ]
+
 
 ROOT_URLCONF = "config.urls"
 
+
+# =====================
+# TEMPLATES
+# =====================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -89,33 +91,24 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = "config.wsgi.application"
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
-DESKTOP_SQLITE = os.environ.get("DESKTOP_SQLITE", "1") == "1"
 
-
-
-import os
-import dj_database_url
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-if os.environ.get("DATABASE_URL"):
-    DATABASES = {
-        "default": dj_database_url.parse(
-            os.environ.get("DATABASE_URL")
-        )
+# =====================
+# DATABASE (SIMPLE + STABLE)
+# =====================
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
+
+# =====================
+# PASSWORD VALIDATORS
+# =====================
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -123,26 +116,35 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+
+# =====================
+# LANGUAGE / TIME
+# =====================
 LANGUAGE_CODE = "uz"
 TIME_ZONE = "Asia/Tashkent"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "/static/"
 
-if in_exe():
-    STATIC_ROOT = EXE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    STATIC_URL = "/static/"
-    STATIC_ROOT = BASE_DIR / "staticfiles"
+# =====================
+# STATIC FILES
+# =====================
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = EXE_DIR / "media" if in_exe() else BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / "media"
 
+
+# =====================
+# DEFAULT AUTO FIELD
+# =====================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# =====================
+# REST FRAMEWORK
+# =====================
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -152,8 +154,16 @@ REST_FRAMEWORK = {
     ],
 }
 
+
+# =====================
+# LOGIN SETTINGS
+# =====================
 LOGIN_URL = "/dashboard/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/dashboard/"
 
+
+# =====================
+# CUSTOM
+# =====================
 RECEIPT_PREFIX = "RCPT"
