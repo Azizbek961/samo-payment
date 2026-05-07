@@ -36,7 +36,7 @@ def get_sqlite_db_path():
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-temporary-secret-key-change-in-production')
 DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "samoschool.fly.dev", '*']
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "samoschool.fly.dev", 'https://samoschoolpayment.up.railway.app', '*']
 
 INSTALLED_APPS = [
     "dal",
