@@ -6,13 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # =====================
-# CORE SETTINGS
+# CORE
 # =====================
-SECRET_KEY = config(
-    "SECRET_KEY",
-    default="django-insecure-temporary-secret-key-change"
-)
-
+SECRET_KEY = config("SECRET_KEY", default="django-insecure-temp-key")
 DEBUG = config("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = [
@@ -38,7 +34,6 @@ INSTALLED_APPS = [
 
     "rest_framework",
 
-    "apps.accounts",
     "apps.students",
     "apps.payments",
     "apps.reports",
@@ -48,7 +43,7 @@ INSTALLED_APPS = [
 
 
 # =====================
-# MIDDLEWARE
+# MIDDLEWARE (LOGIN YO‘Q)
 # =====================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -57,8 +52,6 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-
-    # ⚠️ safe middleware (must be fixed inside too)
 
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -91,7 +84,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 
 # =====================
-# DATABASE (SIMPLE + STABLE)
+# DATABASE
 # =====================
 DATABASES = {
     "default": {
@@ -102,7 +95,7 @@ DATABASES = {
 
 
 # =====================
-# LANGUAGE / TIME
+# I18N
 # =====================
 LANGUAGE_CODE = "uz"
 TIME_ZONE = "Asia/Tashkent"
@@ -111,7 +104,7 @@ USE_TZ = True
 
 
 # =====================
-# STATIC FILES
+# STATIC
 # =====================
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -121,13 +114,13 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 # =====================
-# DEFAULT AUTO FIELD
+# DEFAULT FIELD
 # =====================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # =====================
-# REST FRAMEWORK
+# REST
 # =====================
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
