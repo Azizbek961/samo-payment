@@ -17,6 +17,8 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     ".railway.app",
+    ".up.railway.app",          # add this
+    "samo-payment-production.up.railway.app",  # or be explicit
 ]
 
 
